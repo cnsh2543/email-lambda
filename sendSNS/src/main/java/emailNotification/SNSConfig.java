@@ -59,7 +59,8 @@ public class SNSConfig {
       // Example SELECT query
       String selectQuery =
         "SELECT email, count(like_userid) AS like_count FROM likes a "
-          + "LEFT JOIN USERS b ON a.post_userid = b.userid "
+          + "LEFT JOIN POSTS c ON a.postid = c.postid"
+          + "LEFT JOIN USERS b ON c.userid = b.userid "
           + "WHERE TIMESTAMPDIFF(HOUR, like_timestamp, CURRENT_TIMESTAMP()) <= 24 "
           + "GROUP BY 1 "
           + "HAVING count(like_userid) > 0";
