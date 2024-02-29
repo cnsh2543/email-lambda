@@ -66,12 +66,12 @@ public class SNSConfig {
 
       PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
 
-
+      ResultSet result = preparedStatement.executeQuery();
       preparedStatement.close();
       connection.close();
 
       // Execute the query and get the result set
-      return preparedStatement.executeQuery();
+      return result;
 
 
     } catch (SQLException e) {
