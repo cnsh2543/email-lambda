@@ -45,6 +45,6 @@ jobs:
       - name: Update Lambda Function
         run: |
           cd ./emailOnly 
-          aws lambda update-function-code 
-          --function-name trigger-email 
+          aws lambda update-function-code \
+          --function-name trigger-email \
           --zip-file fileb://$(find ./target -name "emailOnly-1.0-SNAPSHOT.jar" -print)
