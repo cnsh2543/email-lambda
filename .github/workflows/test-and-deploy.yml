@@ -22,17 +22,17 @@ jobs:
 
       - name: Run Tests
         run: |
-          cd ./emailOnly \
+          cd ./emailOnly
           mvn test
 
       - name: Check Style
         run: |
-          cd ./emailOnly \ 
+          cd ./emailOnly 
           mvn checkstyle:check
 
       - name: Build with Maven
         run: |
-          cd ./emailOnly \ 
+          cd ./emailOnly 
           mvn clean install
 
       - name: configure aws credentials
@@ -44,7 +44,7 @@ jobs:
 
       - name: Update Lambda Function
         run: |
-          cd ./emailOnly \ 
-          aws lambda update-function-code \
-          --function-name trigger-email \
+          cd ./emailOnly 
+          aws lambda update-function-code 
+          --function-name trigger-email 
           --zip-file fileb://$(find ./target -name "emailOnly-1.0-SNAPSHOT.jar" -print)
