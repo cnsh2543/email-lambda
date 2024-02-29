@@ -86,7 +86,7 @@ jobs:
 
     - name: Update Lambda Function
       run: |
-        cd ./emailOnly 
+        cd ./sendSNS 
         aws lambda update-function-code \
         --function-name trigger-sns \
         --zip-file fileb://$(find ./target -name "sendSNS-1.0-SNAPSHOT.jar" -print)
