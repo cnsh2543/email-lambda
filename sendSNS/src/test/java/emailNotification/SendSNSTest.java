@@ -14,41 +14,14 @@ public class SendSNSTest {
   SendSNS sendSNS = new SendSNS();
 
   @Test
-  public void generateListReturnsArrayOfEmailList() throws SQLException {
-    // Create mock objects
-    ResultSet mockResultSet = mock(ResultSet.class);
-
-    // Set up mocks for database interactions
-    when(mockResultSet.next()).thenReturn(true).thenReturn(false);
-    when(mockResultSet.getString("email")).thenReturn("test@example.com");
-    when(mockResultSet.getString("like_count")).thenReturn("2");
-
-
-    // Call the method to be tested
-    sendSNS.generateList(mockResultSet);
-
-    // Retrieve the result
-    ArrayList<Content> senderList = sendSNS.getSenderList();
-
-    // Assert the expected results based on the mocked data
-    assertEquals(1, senderList.size());
-    assertEquals("test@example.com", senderList.get(0).getRecipient());
-    assertEquals("2", senderList.get(0).getLikeCount());
-  }
-
-  @Test
   public void snsPublishingIsTriggered() throws SQLException {
     // Create mock objects
-    ResultSet mockResultSet = mock(ResultSet.class);
     SNSConfig mockSNSConfig = mock(SNSConfig.class);
 
     // Set up mocks for database interactions
-    when(mockResultSet.next()).thenReturn(true).thenReturn(false);
-    when(mockResultSet.getString("email")).thenReturn("test@example.com");
-    when(mockResultSet.getString("like_count")).thenReturn("2");
-
     doNothing().when(mockSNSConfig).sendSingleSNS(any());
-    when(mockSNSConfig.getResult()).thenReturn(mockResultSet);
+
+    sendSNS.populateList(new Content("test@example.com","5"));
 
     // Call the method to be tested
     String result = sendSNS.sendAllSNSHelper(mockSNSConfig);
@@ -57,6 +30,20 @@ public class SendSNSTest {
     // Assert the expected results based on the mocked data
     assertEquals("SNS sent successfully!", result);
   }
+
+  @Test
+  public void getSenderListWillRetrieveContentArray() throws SQLException {
+    // Create mock objects
+
+
+    // Call the method to be tested
+    sendSNS.populateList(new Content("test@example.com","5"));
+    ArrayList<Content> result = sendSNS.getSenderList();
+
+    assertEquals(1,result.size());
+    // Retrieve the result
+  }
+
 
 }
 
