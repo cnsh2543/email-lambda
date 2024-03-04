@@ -49,9 +49,9 @@ public class Email {
                             .put(Emailv31.Message.TEMPLATELANGUAGE, true)
                             .put(
                                 Emailv31.Message.SUBJECT,
-                                String.format("You have %s new likes", likes))
+                                String.format("You have %s new comments", likes))
                             .put(
-                                Emailv31.Message.VARIABLES, new JSONObject().put("likes", likes))));
+                                Emailv31.Message.VARIABLES, new JSONObject().put("comments", likes))));
     response = client.post(request);
     return response.getStatus();
   }

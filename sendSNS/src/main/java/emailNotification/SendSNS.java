@@ -34,13 +34,6 @@ public class SendSNS {
 
 
     senderList = new ArrayList<>();
-    // JDBC URL, username, and password of MySQL server
-//        String url = System.getenv("MYSQL_URL");
-//        String user = System.getenv("MYSQL_USER");
-//        String password = System.getenv("MYSQL_PASS");
-//        String url = dotenv.get("MYSQL_URL");
-//        String user = dotenv.get("MYSQL_USER");
-//        String password = dotenv.get("MYSQL_PASS");
     String url = System.getenv("MYSQL_URL");
     String user = System.getenv("MYSQL_USER");
     String password = System.getenv("MYSQL_PASS");
@@ -52,12 +45,12 @@ public class SendSNS {
 
       // Example SELECT query
       String selectQuery =
-        "SELECT email, count(like_userid) AS like_count FROM likes a "
+        "SELECT email, COUNT(comment_userid) AS like_count FROM comments a "
           + "LEFT JOIN POSTS c ON a.postid = c.postid "
           + "LEFT JOIN USERS b ON c.userid = b.userid "
-          + "WHERE TIMESTAMPDIFF(HOUR, like_timestamp, CURRENT_TIMESTAMP()) <= 24 "
+          + "WHERE TIMESTAMPDIFF(HOUR, comment_timestamp, CURRENT_TIMESTAMP()) <= 24 "
           + "GROUP BY 1 "
-          + "HAVING count(like_userid) > 0";
+          + "HAVING count(comment_userid) > 0";
 
       PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
 
