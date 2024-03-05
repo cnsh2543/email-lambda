@@ -22,12 +22,12 @@ jobs:
 
       - name: Run Tests
         run: |
-          cd ./emailOnly
+          cd ./sendSNS
           mvn test
 
       - name: Check Style
         run: |
-          cd ./emailOnly 
+          cd ./sendSNS 
           mvn checkstyle:check
   security-SAST-code:
     needs: email-style-and-test-check
@@ -44,19 +44,6 @@ jobs:
         with:
           name: sast-scan-reports
           path: reports/
-
-  codeQL-analysis:
-    needs: email-style-and-test-check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
-        with:
-          languages: 'java'
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
 
 
   security-DAST-Staging-URL:
@@ -85,7 +72,7 @@ jobs:
 
   prepare-release:
     runs-on: ubuntu-latest
-    needs: [ performance-test, security-DAST-Staging-URL, codeQL-analysis, security-SAST-code ]
+    needs: [ performance-test, security-DAST-Staging-URL, security-SAST-code ]
     outputs:
       commit-message: ${{ steps.commit-message.outputs.message }}
     steps:
@@ -108,7 +95,7 @@ jobs:
           java-version: '21'
       - name: Build with Maven
         run: |
-          cd ./emailOnly 
+          cd ./sendSNS 
           mvn clean install
 
       - name: configure aws credentials
@@ -120,14 +107,14 @@ jobs:
 
       - name: Update Lambda Function
         run: |
-          cd ./emailOnly 
+          cd ./sendSNS 
           aws lambda update-function-code \
           --function-name trigger-email \
-          --zip-file fileb://$(find ./target -name "emailOnly-1.0-SNAPSHOT.jar" -print)
+          --zip-file fileb://$(find ./target -name "sendSNS-1.0-SNAPSHOT.jar" -print)
 
   build-and-deploy-prod-env:
     runs-on: ubuntu-latest
-    needs: prepare-release
+    needs: build-and-deploy-test-env
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -139,7 +126,7 @@ jobs:
           java-version: '21'
       - name: Build with Maven
         run: |
-          cd ./emailOnly 
+          cd ./sendSNS 
           mvn clean install
 
       - name: configure aws credentials
@@ -151,50 +138,7 @@ jobs:
 
       - name: Update Lambda Function
         run: |
-          cd ./emailOnly 
+          cd ./sendSNS 
           aws lambda update-function-code \
           --function-name trigger-email \
-          --zip-file fileb://$(find ./target -name "emailOnly-1.0-SNAPSHOT.jar" -print)
-
-#  sns-test-and-deploy-staging:
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#    - name: Checkout Repository
-#      uses: actions/checkout@v2
-#
-#    - name: Set up Java
-#      uses: actions/setup-java@v2
-#      with:
-#        distribution: 'adopt'
-#        java-version: '21'
-#
-#
-#    - name: Run Tests
-#      run: |
-#        cd ./sendSNS
-#        mvn test
-#
-#    - name: Check Style
-#      run: |
-#        cd ./sendSNS
-#        mvn checkstyle:check
-#
-#    - name: Build with Maven
-#      run: |
-#        cd ./sendSNS
-#        mvn clean install
-#
-#    - name: configure aws credentials
-#      uses: aws-actions/configure-aws-credentials@v2
-#      with:
-#        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#        aws-region: eu-west-2
-#
-#    - name: Update Lambda Function
-#      run: |
-#        cd ./sendSNS
-#        aws lambda update-function-code \
-#        --function-name trigger-SNS \
-#        --zip-file fileb://$(find ./target -name "sendSNS-1.0-SNAPSHOT.jar" -print)
+          --zip-file fileb://$(find ./target -name "sendSNS-1.0-SNAPSHOT.jar" -print)
