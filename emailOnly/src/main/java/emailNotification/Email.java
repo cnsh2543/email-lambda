@@ -51,7 +51,7 @@ public class Email {
                                 Emailv31.Message.SUBJECT,
                                 String.format("You have %s new comments", likes))
                             .put(
-                                Emailv31.Message.VARIABLES, new JSONObject().put("comments", likes))));
+                                Emailv31.Message.VARIABLES, new JSONObject().put("likes", likes))));
     response = client.post(request);
     return response.getStatus();
   }
