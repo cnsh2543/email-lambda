@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  email-style-and-test-check:
+  sqs-style-and-test-check:
     runs-on: ubuntu-latest
 
     steps:
