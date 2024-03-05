@@ -84,8 +84,8 @@ jobs:
           urls: 'xxxxx'
 
   prepare-release:
-    needs: [performance-test, security-DAST-Staging-URL, codeQL-analysis, security-SAST-code]
     runs-on: ubuntu-latest
+    needs: [ performance-test, security-DAST-Staging-URL, codeQL-analysis, security-SAST-code ]
     outputs:
       commit-message: ${{ steps.commit-message.outputs.message }}
     steps:
@@ -95,7 +95,8 @@ jobs:
         id: commit-message
         run: echo "::set-output name=message::$(git log -1 --pretty=%B)"
   build-and-deploy-test-env:
-
+    - runs-on: ubuntu-latest
+    - needs: prepare-release
     - name: Checkout Repository
       uses: actions/checkout@v2
 
@@ -124,6 +125,7 @@ jobs:
         --zip-file fileb://$(find ./target -name "emailOnly-1.0-SNAPSHOT.jar" -print)
 
   build-and-deploy-prod-env:
+    - runs-on: ubuntu-latest
     - name: Checkout Repository
       uses: actions/checkout@v2
 
