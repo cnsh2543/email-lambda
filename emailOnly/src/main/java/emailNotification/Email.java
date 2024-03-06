@@ -10,7 +10,6 @@ import com.mailjet.client.resource.Emailv31;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-// import io.github.cdimascio.dotenv.Dotenv;
 
 public class Email {
   /** This call sends a message to the given recipient with vars and custom vars. */
@@ -23,8 +22,6 @@ public class Email {
     MailjetResponse response;
     client =
         new MailjetClient(
-            //                                                    dotenv.get("MJ_APIKEY_PUBLIC"),
-            //                                                    dotenv.get("MJ_APIKEY_PRIVATE"),
             System.getenv("MJ_APIKEY_PUBLIC"),
             System.getenv("MJ_APIKEY_PRIVATE"),
             new ClientOptions("v3.1"));

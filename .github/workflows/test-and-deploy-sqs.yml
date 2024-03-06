@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  email-style-and-test-check:
+  sqs-style-and-test-check:
     runs-on: ubuntu-latest
 
     steps:
@@ -30,7 +30,7 @@ jobs:
           cd ./sendSNS 
           mvn checkstyle:check
   security-SAST-code:
-    needs: email-style-and-test-check
+    needs: sqs-style-and-test-check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -47,7 +47,7 @@ jobs:
 
 
   security-DAST-Staging-URL:
-    needs: email-style-and-test-check
+    needs: sqs-style-and-test-check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -61,7 +61,7 @@ jobs:
           target: "xxxxx"
 
   performance-test:
-    needs: email-style-and-test-check
+    needs: sqs-style-and-test-check
     runs-on: ubuntu-latest
     steps:
       - name: Run Lighthouse
@@ -109,7 +109,7 @@ jobs:
         run: |
           cd ./sendSNS 
           aws lambda update-function-code \
-          --function-name trigger-email \
+          --function-name trigger-sns \
           --zip-file fileb://$(find ./target -name "sendSNS-1.0-SNAPSHOT.jar" -print)
 
   build-and-deploy-prod-env:
@@ -140,5 +140,5 @@ jobs:
         run: |
           cd ./sendSNS 
           aws lambda update-function-code \
-          --function-name trigger-email \
+          --function-name trigger-sns \
           --zip-file fileb://$(find ./target -name "sendSNS-1.0-SNAPSHOT.jar" -print)

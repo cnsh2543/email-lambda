@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  sqs-style-and-test-check:
+  email-style-and-test-check:
     runs-on: ubuntu-latest
 
     steps:
@@ -143,45 +143,3 @@ jobs:
           --function-name trigger-email \
           --zip-file fileb://$(find ./target -name "emailOnly-1.0-SNAPSHOT.jar" -print)
 
-#  sns-test-and-deploy-staging:
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#    - name: Checkout Repository
-#      uses: actions/checkout@v2
-#
-#    - name: Set up Java
-#      uses: actions/setup-java@v2
-#      with:
-#        distribution: 'adopt'
-#        java-version: '21'
-#
-#
-#    - name: Run Tests
-#      run: |
-#        cd ./sendSNS
-#        mvn test
-#
-#    - name: Check Style
-#      run: |
-#        cd ./sendSNS
-#        mvn checkstyle:check
-#
-#    - name: Build with Maven
-#      run: |
-#        cd ./sendSNS
-#        mvn clean install
-#
-#    - name: configure aws credentials
-#      uses: aws-actions/configure-aws-credentials@v2
-#      with:
-#        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#        aws-region: eu-west-2
-#
-#    - name: Update Lambda Function
-#      run: |
-#        cd ./sendSNS
-#        aws lambda update-function-code \
-#        --function-name trigger-SNS \
-#        --zip-file fileb://$(find ./target -name "sendSNS-1.0-SNAPSHOT.jar" -print)
