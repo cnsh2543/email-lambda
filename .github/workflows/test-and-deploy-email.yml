@@ -115,6 +115,8 @@ jobs:
   build-and-deploy-prod-env:
     runs-on: ubuntu-latest
     needs: build-and-deploy-test-env
+    environment: 
+      name: production_aws
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
